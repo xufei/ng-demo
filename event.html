@@ -6,12 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
     <style>
-        .active {
+        div {
+            padding: 40px;
+            width: 50%;
+            border: 1px solid black;
+        }
+
+        .emit {
             background-color: aqua;
         }
 
+        .broadcast {
+            background-color: coral;
+        }
+
         .normal {
-            width: 50%;
+            background-color: darkgreen;
         }
     </style>
 
@@ -19,25 +29,26 @@
 
     <script type="text/javascript" src="js/event.js"></script>
 </head>
-<body ng-app="event" ng-controller="EventCtrl">
+<body ng-app="event">
 
-<div>
+<div ng-controller="ChildCtrl" ng-class="state">
     Root
-    <div>
+    <div ng-controller="ChildCtrl" ng-class="state">
         A
-        <div ng-class="">
+        <div ng-controller="ChildCtrl" ng-class="state">
             A1
+            <button ng-click="test()">Test</button>
         </div>
-        <div>
+        <div ng-controller="ChildCtrl" ng-class="state">
             A2
         </div>
     </div>
-    <div>
+    <div ng-controller="ChildCtrl" ng-class="state">
         B
-        <div>
+        <div ng-controller="ChildCtrl" ng-class="state">
             B1
         </div>
-        <div>
+        <div ng-controller="ChildCtrl" ng-class="state">
             B2
         </div>
     </div>

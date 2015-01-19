@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <style>
+        .active {
+            background-color: aqua;
+        }
+
+        .normal {
+            width: 50%;
+        }
+    </style>
+
+    <script type="text/javascript" src="libs/angular.min.js"></script>
+
+    <script type="text/javascript" src="js/event.js"></script>
+</head>
+<body ng-app="event" ng-controller="EventCtrl">
+
+<div>
+    Root
+    <div>
+        A
+        <div ng-class="">
+            A1
+        </div>
+        <div>
+            A2
+        </div>
+    </div>
+    <div>
+        B
+        <div>
+            B1
+        </div>
+        <div>
+            B2
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

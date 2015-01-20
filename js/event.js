@@ -1,32 +1,58 @@
 angular.module("event", [])
-    .controller("ChildCtrl", ["$scope", function($scope) {
+    .controller("RootCtrl", ["$scope", "$timeout", function($scope, $timeout) {
         $scope.state = "normal";
 
-        $scope.test = function() {
-            $scope.$emit("emit", 1);
-        };
+        $scope.$on("emit1-0", function(e) {
+            $scope.state = "emit";
 
-        $scope.$on("broadcast", function(e) {
-            e.stopPropagation();
+            $timeout(function() {
+                $scope.$broadcast("broadcast0-1", 1);
+            }, 3000);
+        });
+    }])
+    .controller("ChildCtrl", ["$scope", "$timeout", function($scope, $timeout) {
+        $scope.state = "normal";
+
+        $scope.$on("broadcast0-1", function(e) {
+            e.preventDefault();
 
             $scope.state = "broadcast";
 
-            if (e.currentScope != $scope) {
-                $timeout(function() {
-                    $scope.$broadcast("broadcast", 1);
-                }, 5000);
+            $timeout(function() {
+                $scope.$broadcast("broadcast1-2", 1);
+            }, 3000);
+        });
+
+        $scope.$on("emit2-1", function(e) {
+            e.stopPropagation();
+
+            $scope.state = "emit";
+
+            $timeout(function() {
+                $scope.$emit("emit1-0", 1);
+            }, 3000);
+
+        });
+    }])
+
+    .controller("GrandsonCtrl", ["$scope", "$timeout", function($scope, $timeout) {
+        $scope.state = "normal";
+
+        $scope.test = function() {
+            $scope.state = "emit";
+
+            $timeout(function() {
+                $scope.$emit("emit2-1", 1);
+            }, 3000);
+        };
+
+        $scope.$on("broadcast0-1", function(e) {
+            if (e.defaultPrevented) {
+                console.log("hehe");
             }
         });
 
-        $scope.$on("emit", function(e) {
-            $scope.state = "emit";
-
-            if (e.currentScope == $scope) {
-                e.preventDefault();
-
-                $timeout(function() {
-                    $scope.$emit("emit", 1);
-                }, 5000);
-            }
+        $scope.$on("broadcast1-2", function(e) {
+            $scope.state = "broadcast";
         });
     }]);

@@ -31,24 +31,24 @@
 </head>
 <body ng-app="event">
 
-<div ng-controller="ChildCtrl" ng-class="state">
+<div ng-controller="RootCtrl" ng-class="state" ng-init="name='root'">
     Root
-    <div ng-controller="ChildCtrl" ng-class="state">
+    <div ng-controller="ChildCtrl" ng-class="state" ng-init="name='A'">
         A
-        <div ng-controller="ChildCtrl" ng-class="state">
+        <div ng-controller="GrandsonCtrl" ng-class="state" ng-init="name='A1'">
             A1
             <button ng-click="test()">Test</button>
         </div>
-        <div ng-controller="ChildCtrl" ng-class="state">
+        <div ng-controller="GrandsonCtrl" ng-class="state" ng-init="name='A2'">
             A2
         </div>
     </div>
-    <div ng-controller="ChildCtrl" ng-class="state">
+    <div ng-controller="ChildCtrl" ng-class="state" ng-init="name='B'">
         B
-        <div ng-controller="ChildCtrl" ng-class="state">
+        <div ng-controller="GrandsonCtrl" ng-class="state" ng-init="name='B1'">
             B1
         </div>
-        <div ng-controller="ChildCtrl" ng-class="state">
+        <div ng-controller="GrandsonCtrl" ng-class="state" ng-init="name='B2'">
             B2
         </div>
     </div>

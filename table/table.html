@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	<script src="//cdn.bootcss.com/angular.js/1.4.5/angular.min.js"></script>
+	<title>表格相关</title>
+</head>
+<body ng-app="demo">
+
+<h3>表格的基本操作</h3>
+
+<div ng-controller="CartCtrl as cartCtrl">
+	<button ng-click="cartCtrl.append()">添加到最后</button>
+	<button ng-click="cartCtrl.prepend()">加到前面</button>
+	<button ng-click="cartCtrl.sort()">排序</button>
+
+	<table class="table table bordered">
+		<thead>
+		<tr>
+			<th>名称</th>
+			<th>价格</th>
+			<th>购买数量</th>
+			<th>单品价格</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr ng-repeat-start="item in cartCtrl.goods">
+			<td>
+				<button class="btn btn-xs btn-default"
+				        ng-click="item.$expand=!item.$expand"
+						ng-class="{'dropdown-toggle':!item.$expand, 'dropup':item.$expand}">
+					<span class="caret"></span>
+				</button>
+				{{item.name}}
+			</td>
+			<td>{{item.price}}</td>
+			<td>
+				{{item.count}}
+				<button class="btn btn-xs btn-info" ng-click="cartCtrl.increase(item)">增加</button>
+				<button class="btn btn-xs btn-info" ng-click="cartCtrl.decrease(item)">减少</button>
+			</td>
+			<td>{{item.count * item.price}}元</td>
+			<td>
+				<button class="btn btn-sm btn-warning" ng-click="cartCtrl.remove(item)">删除</button>
+			</td>
+		</tr>
+		<tr ng-repeat-end ng-show="item.$expand">
+			<td colspan="5">{{item.description}}</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h4>总价为{{cartCtrl.total()}}元</h4>
+</div>
+
+<h3></h3>
+
+<script>
+	angular.module("demo", [])
+			.controller("CartCtrl", [function () {
+				this.goods = [
+					{name: "苹果🍎", price: 5, count: 1, description: "亚当和夏娃"},
+					{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"}
+				];
+
+				this.append = function () {
+					this.goods.push({
+						name: "小狗🐶" + this.goods.length,
+						price: 5+Math.ceil(Math.random()*20),
+						count: 1, 
+						description: "人类的好朋友"
+					});
+				};
+
+				this.prepend = function () {
+					this.goods.unshift({
+						name: "🌲" + this.goods.length,
+						price: 10+Math.ceil(Math.random()*10),
+						count: 2, 
+						description: "铃儿响叮当"
+					});
+				};
+
+				this.sort = function () {
+					this.goods.sort(function (a, b) {
+						return a.price - b.price;
+					});
+				};
+
+				this.increase = function (item) {
+					item.count++;
+				};
+
+				this.decrease = function (item) {
+					if (item > 0) {
+						item.count--;
+					}
+				};
+
+				this.remove = function (item) {
+					return this.goods = this.goods.filter(function (it) {
+						return it != item;
+					});
+				};
+
+				this.total = function () {
+					var total = 0;
+					this.goods.forEach(function (it) {
+						total += it.count * it.price;
+					});
+
+					return total;
+				};
+			}]);
+</script>
+
+</body>
+</html>

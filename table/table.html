@@ -145,7 +145,42 @@
 			</tfoot>
 		</table>
 	</div>
+	
+	<hr/>
 
+	<h3>动态编辑</h3>
+
+	<div ng-controller="CartCtrl">
+		<button class="btn btn-default" ng-click="append()">添加到最后</button>
+
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>名称</th>
+					<th>价格</th>
+					<th>购买数量</th>
+					<th>单品价格</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in goods">
+					<td>
+						<span ng-if="!item.$editing">{{item.name}}</span>
+						<input ng-model="item.name" ng-if="item.$editing"/>
+					</td>
+					<td>{{item.price}}</td>
+					<td>{{item.count}}</td>
+					<td>{{item.count * item.price}}元</td>
+					<td>
+						<button class="btn btn-sm btn-warning" ng-if="!item.$editing" ng-click="item.$editing=true">修改</button>
+						<button class="btn btn-sm btn-primary" ng-if="item.$editing" ng-click="item.$editing=false">保存</button>
+						<button class="btn btn-sm btn-warning" ng-click="remove(item)">删除</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
 
 	<script>

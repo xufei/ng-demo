@@ -241,6 +241,28 @@ $scope.someChecked = function() {
 };
 ```
 
+## 动态编辑
+
+有时候还会有动态编辑的需求，也就是说，直接在展示的表格中点击一个编辑按钮，该行就切换到编辑状态，这个在Angular里面也非常容易做到。
+
+我们把一行的界面元素区分为两组，一组是编辑状态，一组是查看状态，两组元素分别用ng-if绑定到该行数据的编辑状态：
+
+```HTML
+<tr ng-repeat="item in goods">
+	<td>
+		<span ng-if="!item.$editing">{{item.name}}</span>
+		<input ng-model="item.name" ng-if="item.$editing"/>
+	</td>
+	...
+	<td>
+		<button class="btn btn-sm btn-warning" ng-if="!item.$editing" ng-click="item.$editing=true">修改</button>
+		<button class="btn btn-sm btn-primary" ng-if="item.$editing" ng-click="item.$editing=false">保存</button>
+	</td>
+</tr>
+```
+
+这样就可以了，都不必在js上加额外的东西。
+
 ## 小结
 
 以上是我们常见的对表格相关的操作，对于初学者而言，最关键的事情是需要时刻注意：

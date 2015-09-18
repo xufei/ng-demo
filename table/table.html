@@ -89,13 +89,65 @@
 	</table>
 </div>
 
+<hr/>
+
+<h3>包含选中功能的表格</h3>
+
+<div ng-controller="CartCtrl as cartCtrl">
+	<button ng-click="cartCtrl.append()">添加到最后</button>
+	<button ng-click="cartCtrl.prepend()">加到前面</button>
+	<button ng-click="cartCtrl.sort()">排序</button>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>
+				<input type="checkbox" ng-model="cartCtrl.$allChecked" ng-change="cartCtrl.checkAll()"/>
+			</th>
+			<th>名称</th>
+			<th>价格</th>
+			<th>购买数量</th>
+			<th>单品价格</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr ng-repeat="item in cartCtrl.goods" ng-class="{'active':item.$checked}">
+			<th>
+				<input type="checkbox" ng-model="item.$checked" ng-change="cartCtrl.checkItem(item)"/>
+			</th>
+			<td>
+				{{item.name}}
+			</td>
+			<td>{{item.price}}</td>
+			<td>
+				{{item.count}}
+				<button class="btn btn-xs btn-info" ng-click="cartCtrl.increase(item)">增加</button>
+				<button class="btn btn-xs btn-info" ng-click="cartCtrl.decrease(item)">减少</button>
+			</td>
+			<td>{{item.count * item.price}}元</td>
+			<td>
+				<button class="btn btn-sm btn-warning" ng-click="cartCtrl.remove(item)">删除</button>
+			</td>
+		</tr>
+		</tbody>
+		<tfoot>
+		总价为{{cartCtrl.total()}}元
+		</tfoot>
+	</table>
+</div>
+
+
 
 <script>
 	angular.module("demo", [])
-			.controller("CartCtrl", [function () {
+			.controller("CartCtrl", ["$scope", function ($scope) {
+				var that = this;
+
 				this.goods = [
 					{name: "苹果🍎", price: 5, count: 1, description: "亚当和夏娃"},
-					{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"}
+					{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"},
+					{name: "香蕉🍌", price: 4, count: 1, description: "猴子最爱"}
 				];
 
 				this.append = function () {
@@ -135,6 +187,23 @@
 				this.remove = function (item) {
 					return this.goods = this.goods.filter(function (it) {
 						return it != item;
+					});
+				};
+
+				this.select = function(item, evt) {
+					item.$checked = true;
+					evt.stopPropagation();
+				};
+
+				this.checkItem = function(item) {
+					this.$allChecked = this.goods.every(function(it) {
+						return it.$checked;
+					});
+				};
+
+				this.checkAll = function() {
+					that.goods.forEach(function (it) {
+						it.$checked = that.$allChecked;
 					});
 				};
 

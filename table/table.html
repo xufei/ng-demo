@@ -15,7 +15,40 @@
 	<button ng-click="cartCtrl.prepend()">加到前面</button>
 	<button ng-click="cartCtrl.sort()">排序</button>
 
-	<table class="table table bordered">
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>名称</th>
+			<th>价格</th>
+			<th>购买数量</th>
+			<th>单品价格</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr ng-repeat="item in cartCtrl.goods">
+			<td>{{item.name}}</td>
+			<td>{{item.price}}</td>
+			<td>{{item.count}}</td>
+			<td>{{item.count * item.price}}元</td>
+			<td>
+				<button class="btn btn-sm btn-warning" ng-click="cartCtrl.remove(item)">删除</button>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<hr/>
+
+<h3>复杂一些的表格</h3>
+
+<div ng-controller="CartCtrl as cartCtrl">
+	<button ng-click="cartCtrl.append()">添加到最后</button>
+	<button ng-click="cartCtrl.prepend()">加到前面</button>
+	<button ng-click="cartCtrl.sort()">排序</button>
+
+	<table class="table table-bordered">
 		<thead>
 		<tr>
 			<th>名称</th>
@@ -30,7 +63,7 @@
 			<td>
 				<button class="btn btn-xs btn-default"
 				        ng-click="item.$expand=!item.$expand"
-						ng-class="{'dropdown-toggle':!item.$expand, 'dropup':item.$expand}">
+				        ng-class="{'dropdown-toggle':!item.$expand, 'dropup':item.$expand}">
 					<span class="caret"></span>
 				</button>
 				{{item.name}}
@@ -50,12 +83,12 @@
 			<td colspan="5">{{item.description}}</td>
 		</tr>
 		</tbody>
+		<tfoot>
+			总价为{{cartCtrl.total()}}元
+		</tfoot>
 	</table>
-
-	<h4>总价为{{cartCtrl.total()}}元</h4>
 </div>
 
-<h3></h3>
 
 <script>
 	angular.module("demo", [])

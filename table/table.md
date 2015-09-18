@@ -8,10 +8,10 @@
 
 ```JavaScript
 angular.module("demo", [])
-	.controller("UserCtrl", [function () {
-		this.data = [
-			{name: "Tom", age: 5, gender: 1},
-			{name: "Jerry", age: 3, gender: 0}
+	.controller("CartCtrl", [function () {
+		this.goods = [
+			{name: "苹果🍎", price: 5, count: 1, description: "亚当和夏娃"},
+			{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"}
 		];
 	}]);
 ```
@@ -20,10 +20,11 @@ angular.module("demo", [])
 
 ```HTML
 ...
-<tr ng-repeat="user in userCtrl.data">
-	<td>{{user.name}}</td>
-	<td>{{user.age}}</td>
-	<td>{{user.gender}}</td>
+<tr ng-repeat="item in cartCtrl.goods">
+	<td>{{item.name}}</td>
+	<td>{{item.price}}</td>
+	<td>{{item.count}}</td>
+	<td>{{item.count * item.price}}元</td>
 </tr>
 ...
 ```
@@ -36,7 +37,12 @@ angular.module("demo", [])
 
 ```JavaScript
 this.append = function () {
-	this.data.push({name: "someone", age: this.data.length, gender: 1});
+	this.goods.push({
+		name: "小狗🐶" + this.goods.length,
+		price: 5+Math.ceil(Math.random()*20),
+		count: 1, 
+		description: "人类的好朋友"
+	});
 };
 ```
 
@@ -44,16 +50,21 @@ this.append = function () {
 
 ```JavaScript
 this.prepend = function () {
-	this.data.unshift({name: "someone before", age: this.data.length, gender: 0});
+	this.goods.unshift({
+		name: "🌲" + this.goods.length,
+		price: 10+Math.ceil(Math.random()*10),
+		count: 2, 
+		description: "铃儿响叮当"
+	});
 };
 ```
 
 如果我们想要对数据进行排序，比如按照年龄排序，也还是在原始数据上操作：
 
 ```JavaScript
-this.sort = function() {
-	this.data.sort(function(a, b) {
-		return a.age - b.age;
+this.sort = function () {
+	this.goods.sort(function (a, b) {
+		return a.price - b.price;
 	});
 };
 ```
@@ -64,12 +75,13 @@ this.sort = function() {
 
 ```HTML
 ...
-<tr ng-repeat="user in userCtrl.data">
-	<td>{{user.name}}</td>
-	<td>{{user.age}}</td>
-	<td>{{user.gender}}</td>
+<tr ng-repeat="item in cartCtrl.goods">
+	<td>{{item.name}}</td>
+	<td>{{item.price}}</td>
+	<td>{{item.count}}</td>
+	<td>{{item.count * item.price}}元</td>
 	<td>
-		<button class="btn btn-sm btn-warning" ng-click="userCtrl.remove(user)">Delete</button>
+		<button class="btn btn-sm btn-warning" ng-click="cartCtrl.remove(item)">删除</button>
 	</td>
 </tr>
 ...
@@ -78,17 +90,60 @@ this.sort = function() {
 这里，只要把迭代项传过去就可以了，然后，在js里变更数据：
 
 ```JavaScript
-this.remove = function (user) {
-	return this.data = this.data.filter(function (it) {
-		return it != user;
+this.remove = function (item) {
+	return this.goods = this.goods.filter(function (it) {
+		return it != item;
 	});
 };
 ```
 
 ## 数组数据的统计
 
-有的时候，我们需要对表格中的数据进行实时统计，常见的有购物车等信息。
+有的时候，我们需要对表格中的数据进行实时统计，比如购物车，需要统计总价等信息，可以用一个函数来计算这个总价，然后在界面上绑定这个函数。
+
+```HTML
+总价为{{cartCtrl.total()}}元
+```
+
+```JavaScript
+this.total = function () {
+	var total = 0;
+	this.goods.forEach(function (it) {
+		total += it.count * it.price;
+	});
+
+	return total;
+};
+```
 
 ## 展开折叠
 
-有时候，我们可能会需要把单行展开，显示详细信息，这时候，因为tr中只能包含td，而td不足以表达多行数据，我们可以使用两个tr来做这个事情。
+有时候，我们可能会需要把单行展开，显示详细信息，这时候，因为tr中只能包含td，而td不足以表达多行数据，所以可以使用两个tr来做这个事情。
+
+在Angular中，ng-repeat只能指定到为一个元素，但如果我们想要有多个平级元素一起循环，难道只能用一个容器把它们先包含起来，然后在循环这个容器吗？在我们的表格中，还是不太合适，因为多个tr再搞一个父容器，逻辑上不是很好，我们可以使用ng-repeat-begin和ng-repeat-end来把一组元素括起来：
+
+```HTML
+<tr ng-repeat-start="item in cartCtrl.goods">
+	<td>
+		<button class="btn btn-xs btn-default"
+		        ng-click="item.$expand=!item.$expand"
+		        ng-class="{'dropdown-toggle':!item.$expand, 'dropup':item.$expand}">
+			<span class="caret"></span>
+		</button>
+		{{item.name}}
+	</td>
+	...
+</tr>
+<tr ng-repeat-end ng-show="item.$expand">
+	<td colspan="5">{{item.description}}</td>
+</tr>
+```
+
+然后，在第二个tr上绑定到item中的一个变量$expand，然后在第一个tr中的某个按钮上，点击的时候切换对应item的$expand的值，就可以实现这个切换了，并且，可以用ng-class的绑定，切换按钮上面的图标。
+
+## 单选和复选的控制
+
+
+## 小结
+
+代码放在[这里](https://github.com/xufei/ng-demo/blob/master/table/table.html)

@@ -248,4 +248,6 @@ $scope.someChecked = function() {
 - 所有界面上的操作，都应当直接在数据上进行修改
 - 界面的展示状态是绑定到数据上的，是它自己根据数据刷新出来的，不存在手工的从数据刷新界面
 
+所以，大部分事情都是通过数组的相关操作完成的，适当使用ES5带给Array的一些方法，比如filter，some，forEach，可以让代码更精炼。
+
 代码放在[这里](https://github.com/xufei/ng-demo/blob/master/table/table.html)

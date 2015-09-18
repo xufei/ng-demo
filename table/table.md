@@ -199,27 +199,20 @@ $scope.$watchCollection("goods", function(val) {
 
 ```JavaScript
 $scope.total = function () {
-	var total = 0;
-	$scope.goods.forEach(function (it) {
-		total += it.count * it.price;
-	});
-
-	return total;
+	return $scope.goods.reduce(function(prev, next) {
+		return prev + next.count * next.price;
+	}, 0);
 };
 ```
 
 如果是包含复选的那种，比如购物车需要选中一些商品然后提交付费，也是类似的方式，只需要在求和的时候判断一下就行了：
 
 ```JavaScript
-$scope.totalToPay = function () {
-	var total = 0;
-	$scope.goods.forEach(function (it) {
-		if (it.$checked) {
-			total += it.count * it.price;
-		}
-	});
 
-	return total;
+$scope.totalToPay = function () {
+	return $scope.goods.reduce(function(prev, next) {
+		return next.$checked ? prev + next.count * next.price : prev;
+	}, 0);
 };
 ```
 
@@ -270,6 +263,6 @@ $scope.someChecked = function() {
 - 所有界面上的操作，都应当直接在数据上进行修改
 - 界面的展示状态是绑定到数据上的，是它自己根据数据刷新出来的，不存在手工的从数据刷新界面
 
-所以，大部分事情都是通过数组的相关操作完成的，适当使用ES5带给Array的一些方法，比如filter，some，forEach，可以让代码更精炼。
+所以，大部分事情都是通过数组的相关操作完成的，适当使用ES5带给Array的一些方法，比如forEach, filter，some，reduce，可以让代码更精炼。
 
 代码放在[这里](https://github.com/xufei/ng-demo/blob/master/table/table.html)

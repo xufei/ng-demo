@@ -100,14 +100,14 @@
 	<div ng-controller="CartCtrl">
 		<button class="btn btn-default" ng-click="append()">添加到最后</button>
 		<button class="btn btn-default" ng-click="sort()">排序</button>
-		
+
 		<button class="btn btn-default" ng-disabled="!someChecked()">支付</button>
 
 		<table class="table table-bordered">
 			<thead>
 				<tr>
 					<th>
-						<input type="checkbox" ng-model="$allChecked" ng-change="checkAll()"/>
+						<input type="checkbox" ng-model="$allChecked" ng-change="checkAll()" />
 					</th>
 					<th>名称</th>
 					<th>价格</th>
@@ -119,7 +119,7 @@
 			<tbody>
 				<tr ng-repeat="item in goods">
 					<th>
-						<input type="checkbox" ng-model="item.$checked" ng-change="checkItem(item)"/>
+						<input type="checkbox" ng-model="item.$checked" ng-change="checkItem(item)" />
 					</th>
 					<td>
 						{{item.name}}
@@ -145,7 +145,7 @@
 			</tfoot>
 		</table>
 	</div>
-	
+
 	<hr/>
 
 	<h3>动态编辑</h3>
@@ -167,7 +167,7 @@
 				<tr ng-repeat="item in goods">
 					<td>
 						<span ng-if="!item.$editing">{{item.name}}</span>
-						<input ng-model="item.name" ng-if="item.$editing"/>
+						<input ng-model="item.name" ng-if="item.$editing" />
 					</td>
 					<td>{{item.price}}</td>
 					<td>{{item.count}}</td>
@@ -257,26 +257,17 @@
 				};
 
 				$scope.total = function () {
-					var total = 0;
-					$scope.goods.forEach(function (it) {
-						total += it.count * it.price;
-					});
-
-					return total;
+					return $scope.goods.reduce(function(prev, next) {
+						return prev + next.count * next.price;
+					}, 0);
 				};
 				
 				$scope.totalToPay = function () {
-					var total = 0;
-					$scope.goods.forEach(function (it) {
-						if (it.$checked) {
-							total += it.count * it.price;
-						}
-					});
-
-					return total;
+					return $scope.goods.reduce(function(prev, next) {
+						return next.$checked ? prev + next.count * next.price : prev;
+					}, 0);
 				};
 			}]);
-
 	</script>
 
 </body>

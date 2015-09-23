@@ -92,7 +92,7 @@ $scope.sort = function () {
 
 ```JavaScript
 $scope.remove = function (item) {
-	return $scope.goods = $scope.goods.filter(function (it) {
+	$scope.goods = $scope.goods.filter(function (it) {
 		return it != item;
 	});
 };

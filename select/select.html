@@ -31,8 +31,8 @@
 	<h3>自定义的下拉多选</h3>
 
 	<div ng-controller="SelectCtrl">
-		<div class="dropdown" ng-class="{'open': pop}">
-			<button class="btn btn-default dropdown-toggle" type="button" ng-click="popSelect()">
+		<div class="dropdown" ng-class="{'open': pop}" ng-mouseover="pop=true" ng-mouseleave="pop=false">
+			<button class="btn btn-default dropdown-toggle" type="button">
 				{{checkedNames()}}
 				<span class="caret"></span>
 			</button>

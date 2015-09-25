@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	<script src="http://cdn.bootcss.com/angular.js/1.4.5/angular.min.js"></script>
+	<title>下拉选择相关</title>
+</head>
+
+<body ng-app="demo">
+
+	<h3>自定义的下拉选择</h3>
+
+	<div ng-controller="SelectCtrl">
+		<div class="dropdown" ng-class="{'open': pop}">
+			<button class="btn btn-default dropdown-toggle" type="button" ng-click="popSelect()">
+				{{selectedItem.name}}
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li ng-repeat="item in goods" ng-click="select(item)" ng-class="{'active':item==selectedItem}">
+					<a href="javascript:void(0)">{{item.name}}</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<hr/>
+
+	<h3>自定义的下拉多选</h3>
+
+	<div ng-controller="SelectCtrl">
+		<div class="dropdown" ng-class="{'open': pop}">
+			<button class="btn btn-default dropdown-toggle" type="button" ng-click="popSelect()">
+				{{checkedNames()}}
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li ng-repeat="item in goods" ng-class="{'active':item.$checked}">
+					<a href="javascript:void(0)">
+						<label>
+							<input type="checkbox" ng-model="item.$checked" /> {{item.name}}
+						</label>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<script>
+		angular.module("demo", [])
+			.controller("SelectCtrl", ["$scope", function ($scope) {
+				$scope.goods = [
+					{name: "苹果🍎", price: 5, count: 1, description: "亚当和夏娃"},
+					{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"},
+					{name: "香蕉🍌", price: 4, count: 1, description: "猴子最爱"}
+				];
+				
+				$scope.selectedItem = $scope.goods[0];
+				
+				$scope.popSelect = function() {
+					$scope.pop = !$scope.pop;	
+				};
+				
+				$scope.select = function(item) {
+					$scope.pop = false;	
+					$scope.selectedItem = item;
+				};
+				
+				$scope.checkedNames = function() {
+					return 	$scope.goods.filter(function(it) {
+						return it.$checked;
+					}).reduce(function(a, b) {
+						return a + b.name + " ";
+					}, "");
+				};
+			}]);
+	</script>
+
+</body>
+
+</html>

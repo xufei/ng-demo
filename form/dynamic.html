@@ -96,20 +96,28 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat-start="color in priceTable" ng-if="false"></tr>
-				<tr ng-repeat="size in color.sizes">
-					<td ng-attr-rowspan="{{color.sizes.length}}" ng-if="!$index">
-						{{color.color}}
+				<tr ng-repeat="item in priceTable">
+					<td ng-if="item.$index==0" ng-attr-rowspan="{{item.$rowspan}}">
+						{{item.color}}
 					</td>
-					<td>{{size.size}}</td>
-					<td>{{size.price}}</td>
-					<td>{{size.count}}</td>
-					<td>{{size.countLimit}}</td>
-					<td>{{size.barCode}}</td>
-					<td>{{size.code}}</td>
-					<td>{{size.operation}}</td>
+					<td>{{item.size}}</td>
+					<td>
+						<input type="text" ng-model="item.price"/>
+					</td>
+					<td>
+						<input type="text" ng-model="item.count"/>
+					</td>
+					<td>
+						<input type="text" ng-model="item.countLimit"/>
+					</td>
+					<td>
+						<input type="text" ng-model="item.barCode"/>
+					</td>
+					<td>
+						<input type="text" ng-model="item.code"/>
+					</td>
+					<td>{{item.operation}}</td>
 				</tr>
-				<tr ng-repeat-end ng-if="false"></tr>
 			</tbody>
 		</table>
 	</div>
@@ -221,15 +229,16 @@
 				
 					$scope.formItems[4].items.forEach(function(color) {
 						if (color.$checked) {
-							var colorGroup = {color: color.newName, sizes: []};
-							
+							var counter=0;
 							$scope.formItems[5].items.forEach(function(size) {
 								if (size.$checked) {
-									colorGroup.sizes.push({size: size.newName});
+									$scope.priceTable.push({color: color.newName, size: size.newName, $index:counter});
+									counter++;
 								}
 							});
-							
-							$scope.priceTable.push(colorGroup);
+							if (counter > 0) {
+								$scope.priceTable[$scope.priceTable.length-counter].$rowspan = counter;
+							}
 						}
 					});
 				};

@@ -38,8 +38,8 @@
 						<label ng-repeat="checkItem in formItem.items" ng-init="checkItem.newName=checkItem.name">
 							<input type="checkbox" ng-model="checkItem.$checked">
 							<span ng-style="{'color':checkItem.value}">▇</span>
-							<span ng-if="!checkItem.checked">{{checkItem.name}}</span>
-							<input ng-if="checkItem.checked" ng-model="checkItem.newName" />
+							<span ng-if="!checkItem.$checked">{{checkItem.name}}</span>
+							<input ng-if="checkItem.$checked" ng-model="checkItem.newName" />
 						</label>
 					</div>
 				</div>
@@ -51,8 +51,8 @@
 					<div class="checkbox">
 						<label ng-repeat="checkItem in formItem.items" ng-init="checkItem.newName=checkItem.name">
 							<input type="checkbox" ng-model="checkItem.$checked">
-							<span ng-if="!checkItem.checked">{{checkItem.name}}</span>
-							<input ng-if="checkItem.checked" ng-model="checkItem.newName" />
+							<span ng-if="!checkItem.$checked">{{checkItem.name}}</span>
+							<input ng-if="checkItem.$checked" ng-model="checkItem.newName" />
 						</label>
 					</div>
 				</div>
@@ -221,15 +221,15 @@
 				
 					$scope.formItems[4].items.forEach(function(color) {
 						if (color.$checked) {
-						var colorGroup = {color: color.name, sizes: []};
-						
-						$scope.formItems[5].items.forEach(function(size) {
-							if (size.$checked) {
-							colorGroup.sizes.push({size:size.name});
-							}
-						});
-						
-						$scope.priceTable.push(colorGroup);
+							var colorGroup = {color: color.newName, sizes: []};
+							
+							$scope.formItems[5].items.forEach(function(size) {
+								if (size.$checked) {
+									colorGroup.sizes.push({size: size.newName});
+								}
+							});
+							
+							$scope.priceTable.push(colorGroup);
 						}
 					});
 				};

@@ -48,8 +48,7 @@
 			<div ng-if="formItem.type=='select'" class="form-group">
 				<label class="col-xs-2 control-label">{{formItem.name}}</label>
 				<div class="col-xs-4">
-					<select class="form-control" ng-options="item.name for item in formItem.items"
-					 ng-model="selectedRegions[$index]" ng-change="selectedRegionChange(item, $index)">
+					<select class="form-control" ng-options="item.name for item in formItem.items" ng-model="formItem.selectedItem">
 						<option>--请选择--</option>
 					</select>
 				</div>
@@ -60,7 +59,8 @@
 				<div class="col-xs-8">
 					<div class="row">
 						<div class="col-xs-3" ng-repeat="region in regions">
-							<select class="form-control" ng-options="item.name for item in region">
+							<select class="form-control" ng-options="item.name for item in region"
+					 			ng-model="formItem.selectedRegions[$index]" ng-change="selectedRegionChange(formItem, $index)">
 							</select>
 						</div>
 					</div>
@@ -133,22 +133,22 @@
 				];
 				
 				$scope.regions = [];
-				$scope.selectedRegions = [];
 				
 				$scope.regions[0] = regions.filter(function(it) {
 					return it.parent == null;
 				});
 				
-				$scope.selectedRegionChange = function(item, index) {
+				$scope.selectedRegionChange = function(formItem, index) {
+					var item = formItem.selectedRegions[index];
 					var next = regions.filter(function(it) {
 						return it.parent == item.code;
 					});
 					
 					if (next.length > 0) {
-						$scope.regions[index] = next;
+						$scope.regions[index+1] = next;
 					}
 					else {
-						delete $scope.regions[index];
+						$scope.regions.splice(index+1, $scope.regions.length - index);
 					}
 				};
 			}]);

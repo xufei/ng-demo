@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	<script src="http://cdn.bootcss.com/angular.js/1.4.5/angular.min.js"></script>
+	<title>动态表单</title>
+</head>
+
+<body ng-app="demo">
+
+	<div ng-controller="FormCtrl">
+
+		<form class="form-horizontal">
+			<div ng-repeat-start="formItem in formItems" ng-if="formItem.type=='text'" class="form-group">
+				<label class="col-xs-2 control-label">{{formItem.name}}</label>
+				<div class="col-xs-4">
+					<input type="text" class="form-control">
+				</div>
+			</div>
+			
+			<div ng-if="formItem.type=='checkbox'" class="form-group">
+				<label class="col-xs-2 control-label">{{formItem.name}}</label>
+				<div class="col-xs-4">
+					<div class="checkbox">
+						<label ng-repeat="checkItem in formItem.items">
+							<input type="checkbox" ng-model="checkItem.checked">{{checkItem.name}}
+						</label>
+					</div>
+				</div>
+			</div>
+			
+			<div ng-if="formItem.type=='color'" class="form-group">
+				<label class="col-xs-2 control-label">{{formItem.name}}</label>
+				<div class="col-xs-4">
+					<div class="checkbox">
+						<label ng-repeat="checkItem in formItem.items" ng-init="checkItem.newName=checkItem.name">
+							<input type="checkbox" ng-model="checkItem.checked">
+							<span ng-style="{'color':checkItem.value}">▇</span>
+							<span ng-if="!checkItem.checked">{{checkItem.name}}</span>
+							<input ng-if="checkItem.checked" ng-model="checkItem.newName"/>
+						</label>
+					</div>
+				</div>
+			</div>
+			
+			<div ng-if="formItem.type=='select'" class="form-group">
+				<label class="col-xs-2 control-label">{{formItem.name}}</label>
+				<div class="col-xs-4">
+					<select class="form-control" ng-options="item.name for item in formItem.items"
+					 ng-model="selectedRegions[$index]" ng-change="selectedRegionChange(item, $index)">
+						<option>--请选择--</option>
+					</select>
+				</div>
+			</div>
+			
+			<div ng-repeat-end ng-if="formItem.type=='region'" class="form-group">
+				<label class="col-xs-2 control-label">{{formItem.name}}</label>
+				<div class="col-xs-8">
+					<div class="row">
+						<div class="col-xs-3" ng-repeat="region in regions">
+							<select class="form-control" ng-options="item.name for item in region">
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<script>
+		angular.module("demo", [])
+			.controller("FormCtrl", ["$scope", function ($scope) {
+				$scope.formItems = [{
+					name: "商品名称",
+					type: "text"
+				}, {
+					name: "配送区域",
+					type: "region"
+				}, {
+					name: "适用人群",
+					type: "checkbox",
+					items: [{
+						name: "小孩子"
+					},{
+						name: "中年人",
+						checked:true
+					},{
+						name: "老年人"
+					}]
+				}, {
+					name: "适用人群",
+					type: "select",
+					items: [{
+						name: "小孩子"
+					},{
+						name: "中年人",
+					},{
+						name: "老年人"
+					}]
+				}, {
+					name: "颜色",
+					type: "color",
+					items: [{
+						name: "红",
+						value: "#ff0000"
+					},{
+						name: "绿",
+						value: "#00ff00"
+					},{
+						name: "蓝",
+						value: "#0000ff"
+					}]
+				}];
+				
+				
+				
+				var regions = [
+					{name: "a", code: "0"},
+					{name: "b", code: "1"},
+					{name: "c", code: "2"},
+					{name: "d", code: "3"},
+					
+					{name: "e", code: "4", parent: "1"},
+					{name: "f", code: "5", parent: "1"},
+					
+					{name: "g", code: "6", parent: "4"},
+					{name: "h", code: "7", parent: "4"},
+					
+					{name: "i", code: "8", parent: "7"},
+					{name: "j", code: "9", parent: "7"}
+				];
+				
+				$scope.regions = [];
+				$scope.selectedRegions = [];
+				
+				$scope.regions[0] = regions.filter(function(it) {
+					return it.parent == null;
+				});
+				
+				$scope.selectedRegionChange = function(item, index) {
+					var next = regions.filter(function(it) {
+						return it.parent == item.code;
+					});
+					
+					if (next.length > 0) {
+						$scope.regions[index] = next;
+					}
+					else {
+						delete $scope.regions[index];
+					}
+				};
+			}]);
+	</script>
+
+</body>
+
+</html>

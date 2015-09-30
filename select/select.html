@@ -36,7 +36,7 @@
 				{{checkedNames()}}
 				<span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu">
+			<ul class="dropdown-menu" style="max-height:200px; overflow-y:auto">
 				<li ng-repeat="item in goods" ng-class="{'active':item.$checked}">
 					<a href="javascript:void(0)">
 						<label>
@@ -53,6 +53,18 @@
 			.controller("SelectCtrl", ["$scope", function ($scope) {
 				$scope.goods = [
 					{name: "苹果🍎", price: 5, count: 1, description: "亚当和夏娃"},
+					{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"},
+					{name: "香蕉🍌", price: 4, count: 1, description: "猴子最爱"},
+					{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"},
+					{name: "香蕉🍌", price: 4, count: 1, description: "猴子最爱"},
+					{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"},
+					{name: "香蕉🍌", price: 4, count: 1, description: "猴子最爱"},
+					{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"},
+					{name: "香蕉🍌", price: 4, count: 1, description: "猴子最爱"},
+					{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"},
+					{name: "香蕉🍌", price: 4, count: 1, description: "猴子最爱"},
+					{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"},
+					{name: "香蕉🍌", price: 4, count: 1, description: "猴子最爱"},
 					{name: "橙子🍊", price: 3, count: 2, description: "富含维生素C"},
 					{name: "香蕉🍌", price: 4, count: 1, description: "猴子最爱"}
 				];

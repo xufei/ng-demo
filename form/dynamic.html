@@ -19,10 +19,10 @@
 					<input type="text" class="form-control">
 				</div>
 			</div>
-			
+
 			<div ng-if="formItem.type=='checkbox'" class="form-group">
 				<label class="col-xs-2 control-label">{{formItem.name}}</label>
-				<div class="col-xs-4">
+				<div class="col-xs-10">
 					<div class="checkbox">
 						<label ng-repeat="checkItem in formItem.items">
 							<input type="checkbox" ng-model="checkItem.checked">{{checkItem.name}}
@@ -30,21 +30,34 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div ng-if="formItem.type=='color'" class="form-group">
 				<label class="col-xs-2 control-label">{{formItem.name}}</label>
-				<div class="col-xs-4">
+				<div class="col-xs-10">
 					<div class="checkbox">
 						<label ng-repeat="checkItem in formItem.items" ng-init="checkItem.newName=checkItem.name">
-							<input type="checkbox" ng-model="checkItem.checked">
+							<input type="checkbox" ng-model="checkItem.$checked">
 							<span ng-style="{'color':checkItem.value}">▇</span>
 							<span ng-if="!checkItem.checked">{{checkItem.name}}</span>
-							<input ng-if="checkItem.checked" ng-model="checkItem.newName"/>
+							<input ng-if="checkItem.checked" ng-model="checkItem.newName" />
 						</label>
 					</div>
 				</div>
 			</div>
-			
+
+			<div ng-if="formItem.type=='size'" class="form-group">
+				<label class="col-xs-2 control-label">{{formItem.name}}</label>
+				<div class="col-xs-10">
+					<div class="checkbox">
+						<label ng-repeat="checkItem in formItem.items" ng-init="checkItem.newName=checkItem.name">
+							<input type="checkbox" ng-model="checkItem.$checked">
+							<span ng-if="!checkItem.checked">{{checkItem.name}}</span>
+							<input ng-if="checkItem.checked" ng-model="checkItem.newName" />
+						</label>
+					</div>
+				</div>
+			</div>
+
 			<div ng-if="formItem.type=='select'" class="form-group">
 				<label class="col-xs-2 control-label">{{formItem.name}}</label>
 				<div class="col-xs-4">
@@ -53,20 +66,52 @@
 					</select>
 				</div>
 			</div>
-			
+
 			<div ng-repeat-end ng-if="formItem.type=='region'" class="form-group">
 				<label class="col-xs-2 control-label">{{formItem.name}}</label>
 				<div class="col-xs-8">
 					<div class="row">
 						<div class="col-xs-3" ng-repeat="region in regions">
-							<select class="form-control" ng-options="item.name for item in region"
-					 			ng-model="formItem.selectedRegions[$index]" ng-change="selectedRegionChange(formItem, $index)">
+							<select class="form-control" ng-options="item.name for item in region" ng-model="formItem.selectedRegions[$index]" ng-change="selectedRegionChange(formItem, $index)">
 							</select>
 						</div>
 					</div>
 				</div>
 			</div>
 		</form>
+
+		<button class="btn btn-info" ng-click="generateTable()">生成表格</button>
+
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>颜色</th>
+					<th>尺码</th>
+					<th>*售价</th>
+					<th>*库存</th>
+					<th>库存预警值</th>
+					<th>条形码</th>
+					<th>商家商品编码</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat-start="color in priceTable" ng-if="false"></tr>
+				<tr ng-repeat="size in color.sizes">
+					<td ng-attr-rowspan="{{color.sizes.length}}" ng-if="!$index">
+						{{color.color}}
+					</td>
+					<td>{{size.size}}</td>
+					<td>{{size.price}}</td>
+					<td>{{size.count}}</td>
+					<td>{{size.countLimit}}</td>
+					<td>{{size.barCode}}</td>
+					<td>{{size.code}}</td>
+					<td>{{size.operation}}</td>
+				</tr>
+				<tr ng-repeat-end ng-if="false"></tr>
+			</tbody>
+		</table>
 	</div>
 
 	<script>
@@ -112,6 +157,25 @@
 						name: "蓝",
 						value: "#0000ff"
 					}]
+				}, {
+					name: "尺码",
+					type: "size",
+					items: [{
+						name: "XXL",
+						value: "XXL"
+					},{
+						name: "XL",
+						value: "XL"
+					},{
+						name: "L",
+						value: "L"
+					},{
+						name: "M",
+						value: "M"
+					},{
+						name: "S",
+						value: "S"
+					}]
 				}];
 				
 				
@@ -150,6 +214,24 @@
 					else {
 						$scope.regions.splice(index+1, $scope.regions.length - index);
 					}
+				};
+				
+				$scope.generateTable = function() {
+					$scope.priceTable = [];
+				
+					$scope.formItems[4].items.forEach(function(color) {
+						if (color.$checked) {
+						var colorGroup = {color: color.name, sizes: []};
+						
+						$scope.formItems[5].items.forEach(function(size) {
+							if (size.$checked) {
+							colorGroup.sizes.push({size:size.name});
+							}
+						});
+						
+						$scope.priceTable.push(colorGroup);
+						}
+					});
 				};
 			}]);
 	</script>
